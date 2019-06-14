@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- Template by html.am -->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Containerization Application Demo</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+
+	<body>
+
+		<div id="wrapper">
+		<header id="header">
+			<div id="content">
+				<div class="innertube">
+					<h1>Fujitsu Cloud Native Services - Container & Platform Demo</h1>
+				</div>
+			</div>
+		</header>
+		</div>
+		
+		<div id="wrapper">
+			<main>
+				<div id="content">
+					<div class="innertube">
+					
+						<h2>Welcome! This application is running from <%= @container_tech %>
+						<h3>IP: <%= @host %> - Port: <%= @port %> - Container Index: <%= @index %></h3>
+						<% if @query_result %>		
+							<div class="dbinfo">
+								<h3>Connected to the MySQL <%= @db_name %> database</h3>
+								<h4>Tables in the INFORMATION SCHEMA</h4>
+								<ul>
+								<% @query_result.each do |row| %>
+									<li><%= row['table_name'] %></li>
+								<% end %>
+								</ul>
+							</div>
+						<% end %>
+		
+					</div>
+				</div>
+			</main>
+		</div>
+		<footer id="footer">
+			<div class="innertube">
+				<p>Fujitsu Cloud Native Services</p>
+			</div>
+		</footer>
+
+	</body>
+</html>
