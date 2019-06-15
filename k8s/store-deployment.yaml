@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-demo
+  labels:
+    app: container-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: container-demo
+  template:
+    metadata:
+      labels:
+        app: container-demo
+    spec:
+      containers:
+      - name: container-demo
+        image: juanpgenovese/container-demo
+        ports:
+        - containerPort: 9292
