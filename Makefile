@@ -14,6 +14,7 @@ help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 .DEFAULT_GOAL := help
+PIPELINE?=docker-build
 
 # DOCKER TASKS
 # Build the container
@@ -47,6 +48,13 @@ tag-latest: ## Generate container `{version}` tag
 tag-version: ## Generate container `latest` tag
 	@echo 'create tag $(VERSION)'
 	docker tag $(DOCKER_REPO)/$(IMAGE_NAME) $(DOCKER_REPO)/$(IMAGE_NAME):$(VERSION)
+
+set-pipeline: ## Sets a pipeline. Example: set-pipeline build
+	@echo 'setting pipeline $(PIPELINE)'
+	fly -t tutorial sp -p $(PIPELINE) -c ci/$(PIPELINE)-pipeline.yml \
+			--var "dockerhub-id=$(DOCKER_REPO)" \
+			--var "dockerhub-username=$(DOCKER_USERNAME)" \
+			--var "dockerhub-password=$(DOCKER_PASSWORD)"
 
 # Build the container
 compose-up: ## Build the release and develoment container. The development
