@@ -1,0 +1,45 @@
+resources:
+- name: container-demo
+  type: git
+  source:
+    uri: https://github.com/eljuanchosf/container-demo.git
+    branch: master
+
+- name: container-demo-docker-image
+  type: docker-image
+  source:
+    repository: ((dockerhub-id))/container-demo
+    username: ((dockerhub-username))
+    password: ((dockerhub-password))
+
+jobs:
+- name: run-tests
+  plan:
+  - get: container-demo
+    trigger: true
+  - task: run-tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: ruby, tag: 2.5.1}
+      inputs:
+        - name: container-demo
+      run:
+        path: sh
+        dir: container-demo
+        args:
+        - -exc
+        - |
+          gem install bundler
+          bundle install
+          rspec spec/
+- name: create-and-publish-image
+  plan:
+    - get: container-demo
+      passed: [run-tests]
+      trigger: true
+    - put: container-demo-docker-image
+      params:
+        build: container-demo/
+        tag_file: container-demo/.git/ref
