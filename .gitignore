@@ -42,5 +42,5 @@ swarm/hosts
 swarm/token
 
 # Created by .ignore support plugin (hsz.mobi)
-
+*.swp
 .idea
