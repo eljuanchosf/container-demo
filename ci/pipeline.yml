@@ -1,4 +1,19 @@
+resource_types:
+- name: kubernetes
+  type: docker-image
+  source:
+    repository: zlabjp/kubernetes-resource
+    tag: "1.14"
+
 resources:
+- name: kubernetes-production
+  type: kubernetes
+  source:
+    server: ((kubernetes-api-server))
+    namespace: robot-shop
+    token: ((kubernetes-user-token))
+    certificate_authority: ((kubernetes-user-cert))
+
 - name: container-demo
   type: git
   source:
@@ -41,5 +56,16 @@ jobs:
       trigger: true
     - put: container-demo-docker-image
       params:
-        build: container-demo/
+        build: container-demo
         tag_file: container-demo/.git/ref
+        tag_as_latest: true
+- name: deploy-k8s
+  plan:
+  - get: container-demo
+    passed: [create-and-publish-image]
+    trigger: true
+  - put: kubernetes-production
+    params:
+      kubectl: apply -f container-demo/k8s/  
+      wait_until_ready_selector: app=container-demo
+
