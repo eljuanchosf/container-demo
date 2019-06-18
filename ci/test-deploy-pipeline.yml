@@ -59,10 +59,10 @@ jobs:
         build: container-demo/
 - name: deploy-k8s
   plan:
-  - get: container-demo-docker-image
+  - get: container-demo
     passed: [create-and-publish-image]
     trigger: true
   - put: kubernetes-production
     params:
-      kubectl: create deployment container-demo --image=juanpgenovese/container-demo
+      kubectl: apply -f container-demo/k8s/  
       wait_until_ready_selector: app=container-demo
