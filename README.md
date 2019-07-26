@@ -7,3 +7,7 @@ Deploy it to:
 * Swarm
 * K8s
 * Cloud Foundry
+
+## Makefile
+
+Check the Makefile for several helper commands.
